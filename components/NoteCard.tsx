@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Note } from '../types';
@@ -9,12 +10,16 @@ interface NoteCardProps {
 }
 
 const NoteCard: React.FC<NoteCardProps> = ({ note }) => {
-  const formattedDate = note.created_at
+  const formattedDate = note.created_at && !isNaN(new Date(note.created_at).getTime())
     ? format(new Date(note.created_at), 'MMM d')
     : 'Unknown';
 
   // Use random gradient placeholder if no image
   const placeholderGradient = `linear-gradient(135deg, #E0E7FF 0%, #F5F3FF 100%)`;
+
+  // Safe access to counts
+  const likesCount = note.likes && note.likes[0] ? note.likes[0].count : 0;
+  const commentsCount = note.comments && note.comments[0] ? note.comments[0].count : 0;
 
   return (
     <Link to={`/note/${note.id}`} className="block h-full group">
@@ -69,7 +74,7 @@ const NoteCard: React.FC<NoteCardProps> = ({ note }) => {
           
           <div className="mt-auto pt-4 border-t border-gray-50 flex items-center justify-between">
              <div className="flex items-center gap-2">
-                <div className="h-7 w-7 rounded-full bg-gray-100 border-2 border-white shadow-sm overflow-hidden">
+                <div className="h-7 w-7 rounded-full bg-gray-100 border-2 border-white shadow-sm overflow-hidden flex items-center justify-center">
                    {note.profiles?.avatar_url ? (
                      <img src={note.profiles.avatar_url} alt="User" className="h-full w-full object-cover" />
                    ) : (
@@ -78,17 +83,16 @@ const NoteCard: React.FC<NoteCardProps> = ({ note }) => {
                      </div>
                    )}
                 </div>
-                {/* <span className="text-xs font-medium text-navy-600 truncate max-w-[80px]">
-                  {note.profiles?.username || 'User'}
-                </span> */}
              </div>
 
              <div className="flex items-center gap-4 text-xs font-medium text-navy-400">
-                {/* Simulated counts for visual design since backend for them is new */}
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1" title={`${likesCount} Likes`}>
                    <Heart className="h-3.5 w-3.5" />
-                   {/* Randomize slightly for mockup feel if 0, else show real */}
-                   <span>{note.likes?.[0]?.count || Math.floor(Math.random() * 10) + 1}k</span> 
+                   <span>{likesCount}</span> 
+                </div>
+                <div className="flex items-center gap-1" title={`${commentsCount} Comments`}>
+                   <MessageSquare className="h-3.5 w-3.5" />
+                   <span>{commentsCount}</span>
                 </div>
                 <div className="flex items-center gap-1">
                    <Clock className="h-3.5 w-3.5" />

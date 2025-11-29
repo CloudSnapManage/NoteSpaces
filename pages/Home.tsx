@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
@@ -24,11 +25,14 @@ const Home: React.FC = () => {
   const fetchNotes = async () => {
     try {
       setError(null);
+      // Fetch notes with Author profile, Likes count, and Comments count
       const { data, error } = await supabase
         .from('notes')
         .select(`
           *,
-          profiles (username, avatar_url)
+          profiles (username, avatar_url),
+          likes (count),
+          comments (count)
         `)
         .order('created_at', { ascending: false });
 

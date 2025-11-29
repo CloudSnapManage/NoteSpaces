@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -46,6 +47,9 @@ const Layout: React.FC = () => {
       </div>
     );
   }
+
+  // Helper for safe initial access
+  const userInitial = user.email ? user.email[0].toUpperCase() : 'U';
 
   // --- DASHBOARD LAYOUT (Logged In) ---
   const NavItem = ({ to, icon: Icon, label }: { to: string, icon: any, label: string }) => (
@@ -98,7 +102,7 @@ const Layout: React.FC = () => {
           <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
              <div className="flex items-center gap-3 mb-3">
                <div className="h-10 w-10 rounded-full bg-brand-100 flex items-center justify-center text-brand-600 font-bold">
-                 {user.email?.[0].toUpperCase()}
+                 {userInitial}
                </div>
                <div className="overflow-hidden">
                  <p className="text-sm font-bold text-navy-900 truncate">My Account</p>

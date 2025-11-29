@@ -1,60 +1,120 @@
-# CampusNotes - Free Note Sharing for Students
+# NoteSpace ⚡
 
-A React-based web application for sharing notes, hosted on GitHub Pages with Supabase backend.
+> **Share knowledge. Study together.**  
+> A modern, open-source note-sharing platform for college students.
 
-## 🚀 Setup & Deployment Guide
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![React](https://img.shields.io/badge/React-18-blue)
+![Supabase](https://img.shields.io/badge/Supabase-Auth%20%26%20DB-green)
+![Tailwind](https://img.shields.io/badge/TailwindCSS-v3-06B6D4)
 
-### 1. Supabase Setup (Backend)
-1. Go to [Supabase](https://supabase.com/) and create a new free project.
-2. Go to the **SQL Editor** in the sidebar.
-3. Copy the content of `SUPABASE_SETUP.sql` from this project and paste it into the SQL Editor. Run the query.
-   * *Note: This creates the Tables, Row Level Security policies, and Storage policies.*
-4. Go to **Storage** in the sidebar:
-   * Create a new bucket named `note-images`.
-   * Ensure "Public" is toggled ON.
+**NoteSpace** is a static, serverless web application designed to help students share class notes, summaries, and cheat sheets. Built with performance and UX in mind, it features a glassmorphic design, real-time database interactions, and secure authentication.
 
-### 2. Environment Variables
-1. Create a `.env` file in the root directory (local development).
-2. Add your keys from Supabase Dashboard -> Project Settings -> API:
-   ```env
-   VITE_SUPABASE_URL=your_project_url
-   VITE_SUPABASE_ANON_KEY=your_anon_key
-   ```
+---
 
-### 3. Local Development
-1. Install dependencies:
-   ```bash
-   npm install
-   ```
-2. Run the development server:
-   ```bash
-   npm run dev
-   ```
+## 🚀 Features
 
-### 4. Deploy to GitHub Pages
-1. Push this code to a GitHub repository.
-2. Go to your repository **Settings** -> **Secrets and variables** -> **Actions**.
-3. Add repository secrets for `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`.
-   * *Alternatively*, for a pure static deployment without Actions:
-     * Create a `.env.production` file with your keys (Note: These keys are visible in the browser bundle regardless, which is safe for the `ANON` key if RLS is set up correctly).
-4. **Manual Build & Deploy**:
-   ```bash
-   npm run build
-   ```
-   * Push the contents of the `dist` folder to a `gh-pages` branch, OR
-   * Go to Repo Settings -> Pages -> Build and deployment -> Source: **GitHub Actions** (Recommended for React apps) or simply select the branch if you pushed the built assets.
+### 👤 Authentication & User Profiles
+*   **Secure Sign-up/Login**: Powered by Supabase Auth (Email/Password).
+*   **User Profiles**: Custom avatars, stats (likes/followers), and bio.
+*   **Persistent Sessions**: Stay logged in across page refreshes.
 
-   **Easiest Static Host Method:**
-   1. In `vite.config.ts`, ensure `base: './'` is set (already done).
-   2. Run `npm run build`.
-   3. Upload the contents of the `dist` folder to any static host, or push the `dist` folder content to a `gh-pages` branch.
+### 📝 Note Management
+*   **Rich Note Creation**: Markdown-style content support.
+*   **Image Uploads**: Drag & drop image hosting via Supabase Storage.
+*   **Tagging System**: Organize notes by subject (e.g., `#biology`, `#cs101`).
+*   **Search**: Real-time filtering by title, content, or tags.
 
-### 5. Authentication
-* By default, Supabase requires email confirmation.
-* For testing: Go to Supabase Auth -> Providers -> Email -> **Disable "Confirm email"** to allow instant login after registration.
+### 💬 Social Interaction
+*   **Likes**: Heart your favorite notes.
+*   **Comments**: Discuss topics and ask questions on specific notes.
+*   **Admin Role**: Moderators can manage content and maintain community standards.
 
-## Features
-* **Authentication**: Secure login/signup.
-* **Storage**: Upload images for free.
-* **Database**: Real-time note storage with tags.
-* **UI**: Fully responsive Tailwind CSS design.
+### 🎨 Modern UI/UX
+*   **Glassmorphism**: Premium frosted glass aesthetics.
+*   **Responsive**: Mobile-first design using Tailwind CSS.
+*   **Dark Mode Editor**: Comfortable writing environment.
+
+---
+
+## 🛠️ Tech Stack
+
+*   **Frontend**: React (Vite)
+*   **Styling**: Tailwind CSS + Lucide Icons
+*   **Backend (BaaS)**: Supabase (PostgreSQL, Auth, Storage)
+*   **Hosting**: GitHub Pages (Static)
+
+---
+
+## ⚡ Getting Started
+
+Follow these steps to set up the project locally.
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/your-username/notespace.git
+cd notespace
+```
+
+### 2. Install Dependencies
+```bash
+npm install
+```
+
+### 3. Configure Supabase (Backend)
+You need a free Supabase project to run this app.
+
+1.  **Create Project**: Go to [Supabase.com](https://supabase.com) and create a new project.
+2.  **Run SQL Setup**:
+    *   Open the **SQL Editor** in your Supabase Dashboard.
+    *   Copy the contents of `complete_db_setup.txt` (included in this repo).
+    *   Paste and click **Run** to generate tables and policies.
+3.  **Disable Email Confirm**:
+    *   Go to **Authentication** > **Providers** > **Email**.
+    *   Disable "Confirm email" (for easier testing).
+
+### 4. Set Environment Variables
+Create a `.env` file in the root directory:
+
+```env
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+*Get these from Project Settings > API.*
+
+### 5. Run Locally
+```bash
+npm run dev
+```
+Open [http://localhost:5173](http://localhost:5173) in your browser.
+
+---
+
+## 🌍 Deployment
+
+This app is optimized for **GitHub Pages**.
+
+1.  **Build the Project**:
+    ```bash
+    npm run build
+    ```
+2.  **Deploy**:
+    *   Push the contents of the `dist` folder to a `gh-pages` branch.
+    *   OR, configure GitHub Actions to build and deploy automatically on push to `main`.
+
+> **Note on Routing**: This app uses `HashRouter` (`/#/`) to ensure compatibility with static hosting like GitHub Pages without needing server-side rewrite rules.
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome!
+1.  Fork the Project
+2.  Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4.  Push to the Branch (`git push origin feature/AmazingFeature`)
+5.  Open a Pull Request
+
+## 📄 License
+
+Distributed under the MIT License. See `LICENSE` for more information.

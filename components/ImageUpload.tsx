@@ -1,6 +1,7 @@
+
 import React, { useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { Upload, X, Loader2, Image as ImageIcon } from 'lucide-react';
+import { X, Loader2, Image as ImageIcon } from 'lucide-react';
 
 interface ImageUploadProps {
   onUploadComplete: (url: string) => void;
@@ -23,7 +24,8 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onUploadComplete, onClear, cu
 
       const file = event.target.files[0];
       const fileExt = file.name.split('.').pop();
-      const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
+      // Use timestamp and random string to ensure uniqueness
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
       const filePath = `${fileName}`;
 
       const { error: uploadError } = await supabase.storage

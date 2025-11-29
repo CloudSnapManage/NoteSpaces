@@ -1,9 +1,10 @@
+
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
 import { Note, Profile as ProfileType } from '../types';
 import NoteCard from '../components/NoteCard';
-import { Loader2, BookOpen, MapPin, Calendar, Link as LinkIcon, Edit3 } from 'lucide-react';
+import { Loader2, MapPin, Calendar } from 'lucide-react';
 import { format } from 'date-fns';
 
 const Profile: React.FC = () => {
@@ -11,6 +12,7 @@ const Profile: React.FC = () => {
   const [notes, setNotes] = useState<Note[]>([]);
   const [profile, setProfile] = useState<ProfileType | null>(null);
   const [loading, setLoading] = useState(true);
+  const [totalLikes, setTotalLikes] = useState(0);
 
   useEffect(() => {
     if (user) fetchProfileAndNotes();
@@ -19,10 +21,28 @@ const Profile: React.FC = () => {
   const fetchProfileAndNotes = async () => {
     try {
       if (!user) return;
+      
+      // Fetch Profile
       const { data: profileData } = await supabase.from('profiles').select('*').eq('id', user.id).single();
       setProfile(profileData);
-      const { data: notesData } = await supabase.from('notes').select('*').eq('user_id', user.id).order('created_at', { ascending: false });
-      setNotes(notesData || []);
+
+      // Fetch Notes with Likes count
+      const { data: notesData } = await supabase
+        .from('notes')
+        .select(`*, likes(count), comments(count)`)
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+      
+      const fetchedNotes = notesData || [];
+      setNotes(fetchedNotes);
+
+      // Calculate Total Likes
+      const likesSum = fetchedNotes.reduce((acc, note) => {
+        const count = note.likes?.[0]?.count || 0;
+        return acc + count;
+      }, 0);
+      setTotalLikes(likesSum);
+
     } catch (error) {
       console.error(error);
     } finally {
@@ -44,7 +64,7 @@ const Profile: React.FC = () => {
            <div className="h-32 w-32 sm:h-40 sm:w-40 bg-white p-1.5 rounded-[2rem] shadow-xl">
               <div className="h-full w-full bg-navy-900 rounded-[1.7rem] flex items-center justify-center overflow-hidden">
                 {profile?.avatar_url ? (
-                   <img src={profile.avatar_url} className="h-full w-full object-cover" />
+                   <img src={profile.avatar_url} className="h-full w-full object-cover" alt="Profile" />
                 ) : (
                    <span className="text-6xl font-heading font-bold text-white">{username[0].toUpperCase()}</span>
                 )}
@@ -60,12 +80,12 @@ const Profile: React.FC = () => {
            </div>
            <div className="w-px h-8 bg-gray-100"></div>
            <div className="text-center">
-              <div className="text-2xl font-bold text-navy-900">1.2k</div>
+              <div className="text-2xl font-bold text-navy-900">0</div>
               <div className="text-xs font-bold text-navy-400 uppercase tracking-wider">Followers</div>
            </div>
            <div className="w-px h-8 bg-gray-100"></div>
            <div className="text-center">
-              <div className="text-2xl font-bold text-navy-900">8.5k</div>
+              <div className="text-2xl font-bold text-navy-900">{totalLikes}</div>
               <div className="text-xs font-bold text-navy-400 uppercase tracking-wider">Likes</div>
            </div>
         </div>
