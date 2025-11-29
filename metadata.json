@@ -1,0 +1,5 @@
+{
+  "name": "NoteSpace",
+  "description": "A free, static note-sharing platform for college students powered by Supabase and React.",
+  "requestFramePermissions": []
+}
